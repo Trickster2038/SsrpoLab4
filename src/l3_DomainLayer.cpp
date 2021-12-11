@@ -54,6 +54,17 @@ PoliticalFraction::PoliticalFraction(const char *name)
     _name = string(name);
     assert(invariant());
 }
+PoliticalFraction::PoliticalFraction(const string &name, vector<Candidate> candidates)
+    : _name(name), _candidates(candidates)
+{
+    assert(invariant());
+}
+PoliticalFraction::PoliticalFraction(const char *name, vector<Candidate> candidates)
+{
+    _name = string(name);
+    _candidates = candidates;
+    assert(invariant());
+}
 
 void PoliticalFraction::addCandidate(const string &name, const string &surname,
                                      uint age, uint income, uint voices, uint district_id)
@@ -68,6 +79,17 @@ void PoliticalFraction::addCandidate(const char *name, const char *surname, long
 {
     _candidates.push_back(Candidate(name, surname,
                                     age, income, voices, district_id));
+}
+
+const uint PoliticalFraction::countVoices(set<uint> forbidden) const {
+    uint voices = 0;
+    for(auto &cand : _candidates){
+        const bool is_in = forbidden.find(cand.getDistrictId()) != forbidden.end();
+        if(!is_in){
+            voices += cand.getVoices();
+        }
+    }
+    return voices;
 }
 
 bool PoliticalFraction::write(ostream &os)
@@ -110,26 +132,3 @@ shared_ptr<ICollectable> FractionsCollector::read(istream &is)
     return fraction;
 }
 
-// bool Candidate::write(ostream &os)
-// {
-//     writeString(os, _name);
-//     writeString(os, _surname);
-//     writeNumber(os, _age);
-//     writeNumber(os, _income);
-//     writeNumber(os, _voices);
-//     writeNumber(os, _district_id);
-
-//     return os.good();
-// }
-
-// shared_ptr<ICollectable> ItemCollector::read(istream &is)
-// {
-//     string name = readString(is, MAX_FIO_FIELD_LENGTH);
-//     string surname = readString(is, MAX_FIO_FIELD_LENGTH);
-//     uint age = readNumber<uint>(is);
-//     uint income = readNumber<uint>(is);
-//     Fraction fraction = Converter::toFraction(readString(is, MAX_FRACTION_LENGTH));
-//     uint voices = readNumber<uint>(is);
-
-//     return make_shared<Candidate>(name, surname, age, income, fraction, voices);
-// }

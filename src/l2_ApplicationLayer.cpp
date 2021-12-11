@@ -1,4 +1,6 @@
 #include "hw/l2_ApplicationLayer.h"
+#include <algorithm>
+#include <set>
 
 using namespace std;
 
@@ -76,7 +78,10 @@ bool Application::performCommand(const vector<string> &args)
             _out.Output("Некорректное количество аргументов команды update");
             return false;
         }
-        _col.updateItem(stoul(args[1]), make_shared<PoliticalFraction>(args[2].c_str()));
+        const PoliticalFraction &pf = static_cast<PoliticalFraction &>(*_col.getItem(stoul(args[1])));
+        vector<Candidate> cands = pf.getCandidates();
+        _col.updateItem(stoul(args[1]),
+                        make_shared<PoliticalFraction>(args[2].c_str(), cands));
         return true;
     }
 
@@ -102,7 +107,10 @@ bool Application::performCommand(const vector<string> &args)
                     _out.Output("\n\t[" + to_string(cnt_items) + "]" +
                                 " " + cand.getName() +
                                 " " + cand.getSurname() +
-                                "\n\tAge: " + to_string(cand.getAge()));
+                                "\n\tage: " + to_string(cand.getAge()) +
+                                "\n\tincome: " + to_string(cand.getIncome()) +
+                                "\n\tvoices: " + to_string(cand.getVoices()) +
+                                "\n\tdistrick id: " + to_string(cand.getDistrictId()));
                     cnt_items++;
                 }
                 count++;
@@ -121,11 +129,56 @@ bool Application::performCommand(const vector<string> &args)
             _out.Output("Некорректное количество аргументов команды addcandidte");
             return false;
         }
-            PoliticalFraction &item =
-                static_cast<PoliticalFraction &>(*_col.getItem(stoul(args[1])));
-            item.addCandidate(args[2].c_str(), args[3].c_str(), stoul(args[4]),
-                              stoul(args[5]), stoul(args[6]), stoul(args[7]));
-            return true;
+        PoliticalFraction &item =
+            static_cast<PoliticalFraction &>(*_col.getItem(stoul(args[1])));
+        item.addCandidate(args[2].c_str(), args[3].c_str(), stoul(args[4]),
+                          stoul(args[5]), stoul(args[6]), stoul(args[7]));
+        return true;
+    }
+
+    if (args[0] == "rating")
+    {
+        set<uint> forbidden;
+        for (size_t i = 1; i < args.size(); ++i)
+        {
+            forbidden.insert(stoul(args[i]));
+        }
+
+        struct Rating
+        {
+            uint voices;
+            string fraction;
+            Rating(uint v, string fr)
+            {
+                voices = v;
+                fraction = fr;
+            }
+        };
+
+        vector<Rating> rating;
+        for (size_t i = 0; i < _col.getSize(); ++i)
+        {
+            const PoliticalFraction &item = static_cast<PoliticalFraction &>(*_col.getItem(i));
+
+            if (!_col.isRemoved(i))
+            {
+                rating.push_back(Rating(item.countVoices(forbidden), item.getName()));
+            }
+        }
+
+        sort(rating.begin(), rating.end(), [](const Rating &lhs, const Rating &rhs)
+             { return lhs.voices > rhs.voices; });
+
+        size_t cnt = 0;
+        for (auto &fract : rating)
+        {
+            _out.Output("[" + to_string(cnt) + "]" +
+                        " " + fract.fraction +
+                        " - voices: " + to_string(fract.voices));
+            cnt++;
+        }
+
+        return true;
     }
 
     _out.Output("Недопустимая команда '" + args[0] + "'");
