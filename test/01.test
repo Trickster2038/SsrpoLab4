@@ -1,5 +1,8 @@
-a Max Kaz 28 500000 YABLOKO 20010
-a Vladimir Zhirinovsky 75 1000000 LDPR 29453
-a Genadii Zyganov 77 890000 KPRF 18903
-s
-v
+a LDPR
+a KPRF
+ac 0 Vladimir Zhirinovsky 75 5000000 23017 0
+ac 0 Pavel Pyatnicky 45 1000000 12098 1
+ac 1 Genadiy Zyganov 77 3000000 15098 0
+ac 1 Ivan Ivanov 70 1000000 10432 0
+rating
+rating 1

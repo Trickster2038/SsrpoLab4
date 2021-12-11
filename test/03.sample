@@ -1,1 +1,28 @@
-Недопустимая команда 'quit'
+[0]LDPR 
+
+	[0] Vladimir Zhirinovsky
+	age: 75
+	income: 5000000
+	voices: 23017
+	districk id: 0
+
+	[1] Pavel Pyatnicky
+	age: 45
+	income: 1000000
+	voices: 12098
+	districk id: 1
+[1]KPRF 
+
+	[0] Genadiy Zyganov
+	age: 77
+	income: 3000000
+	voices: 15098
+	districk id: 0
+
+	[1] Ivan Ivanov
+	age: 70
+	income: 1000000
+	voices: 10432
+	districk id: 0
+Количество элементов в коллекции: 2
+Выполнение завершено успешно
