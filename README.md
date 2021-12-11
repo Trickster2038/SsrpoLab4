@@ -46,7 +46,8 @@
 
 Диаграмма классов агрегата PoliticalFraction
 
-![Диаграмма классов агрегата PoliticalFraction](doc/classes.jpg)
+<img src="./doc/classes.jpg" alt="Диаграмма классов" width="480">
+
 
 ## Выводы
 
