@@ -38,7 +38,7 @@ const uint Candidate::getVoices() const { return _voices; }
 const uint Candidate::getDistrictId() const { return _district_id; }
 
 const string &PoliticalFraction::getName() const { return _name; }
-const vector<Candidate> PoliticalFraction::getCandidates() const {return _candidates;}
+const vector<Candidate> PoliticalFraction::getCandidates() const { return _candidates; }
 
 bool PoliticalFraction::invariant() const
 {

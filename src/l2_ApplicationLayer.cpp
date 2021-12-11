@@ -71,7 +71,7 @@ bool Application::performCommand(const vector<string> &args)
 
     if (args[0] == "u" || args[0] == "update")
     {
-        if (args.size() != 8)
+        if (args.size() != 3)
         {
             _out.Output("Некорректное количество аргументов команды update");
             return false;
@@ -96,6 +96,15 @@ bool Application::performCommand(const vector<string> &args)
             if (!_col.isRemoved(i))
             {
                 _out.Output("[" + to_string(i) + "]" + item.getName() + " ");
+                size_t cnt_items = 0;
+                for (auto &cand : item.getCandidates())
+                {
+                    _out.Output("\n\t[" + to_string(cnt_items) + "]" +
+                                " " + cand.getName() +
+                                " " + cand.getSurname() +
+                                "\n\tAge: " + to_string(cand.getAge()));
+                    cnt_items++;
+                }
                 count++;
             }
         }
@@ -103,6 +112,20 @@ bool Application::performCommand(const vector<string> &args)
         _out.Output("Количество элементов в коллекции: " + to_string(count));
 
         return true;
+    }
+
+    if (args[0] == "ac" || args[0] == "addcandidate")
+    {
+        if (args.size() != 8)
+        {
+            _out.Output("Некорректное количество аргументов команды addcandidte");
+            return false;
+        }
+            PoliticalFraction &item =
+                static_cast<PoliticalFraction &>(*_col.getItem(stoul(args[1])));
+            item.addCandidate(args[2].c_str(), args[3].c_str(), stoul(args[4]),
+                              stoul(args[5]), stoul(args[6]), stoul(args[7]));
+            return true;
     }
 
     _out.Output("Недопустимая команда '" + args[0] + "'");
